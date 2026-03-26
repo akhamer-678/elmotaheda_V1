@@ -1,0 +1,126 @@
+.admin-page {
+  padding: 20px;
+  font-family: sans-serif;
+  background-color: var(--color-bg-section);
+}
+.header {
+  background-color: white;
+  position: relative;
+  -webkit-box-shadow: 0 0 10px #ddd;
+  -moz-box-shadow: 0 0 10px #ddd;
+  box-shadow: 0 0 10px #ddd;
+}
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+.header h2 {
+  color: var(--color-primary);
+  font-size: 24px;
+}
+.header img {
+  max-width: 100px;
+}
+.filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.filters select,
+.filters input,
+.filters button {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--color-primary);
+}
+
+.table-wrapper {
+  max-height: 400px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  background: var(--color-primary-light);
+}
+
+th,
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.pending {
+  background: orange;
+}
+.confirmed {
+  background: green;
+}
+.attended {
+  background: blue;
+}
+.canceled {
+  background: red;
+}
+
+.actions button {
+  margin: 3px;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  opacity: 0.8;
+}
+
+/* toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #333;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.toast .show {
+  opacity: 1;
+}
+tbody tr:nth-child(even) {
+  background-color: #e9e8e8;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+tbody tr:hover {
+  background-color: #bec9df;
+}

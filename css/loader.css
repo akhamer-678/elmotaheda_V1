@@ -1,0 +1,131 @@
+/* PRELOADER SCREEN */
+
+#preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #ffffff;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  flex-direction: column;
+  transition: opacity 0.5s ease;
+}
+#preloader.active {
+  display: flex;
+}
+
+/* WRAPPER */
+
+.loader-wrapper {
+  text-align: center;
+}
+
+/* LOADER */
+
+.loader {
+  position: relative;
+  width: 120px;
+  height: 80px;
+  margin: auto;
+}
+
+/* SQUARES */
+
+.square {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  transform: rotate(45deg);
+  animation: spinMove 1.8s infinite ease-in-out;
+}
+
+/* COLORS */
+
+.teal {
+  background: #2aa89a;
+  left: 0;
+}
+
+.yellow {
+  background: #f2b705;
+  left: 30px;
+  animation-delay: 0.2s;
+}
+
+.dark {
+  background: #2b2b2b;
+  left: 60px;
+  animation-delay: 0.4s;
+}
+
+/* ANIMATION */
+
+@keyframes spinMove {
+  0% {
+    transform: rotate(45deg) scale(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: rotate(225deg) scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(405deg) scale(1);
+    opacity: 0.7;
+  }
+}
+
+/* CLINIC NAME */
+
+/* clinic name hidden at first */
+
+.clinic-name {
+  margin-top: 30px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeText 0.8s ease forwards;
+  animation-delay: 0.6s;
+}
+
+/* Arabic */
+
+.arabic-name {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2b2b2b;
+  font-family: "Tahoma", sans-serif;
+}
+
+/* English */
+
+.english-name {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #2aa89a;
+  font-family: Arial, sans-serif;
+}
+
+/* animation */
+
+@keyframes fadeText {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

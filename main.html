@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المتحده الطبيه التخصصيه | مركز طبي في السويس</title>
+    <meta
+      name="description"
+      content="المتحده الطبيه التخصصيه مركز طبي متكامل في السويس يقدم خدمات الكشف الطبي والأشعة والتحاليل الطبية مع أفضل الأطباء وإمكانية حجز المواعيد أونلاين بسهولة."
+    />
+    <meta
+      name="keywords"
+      content="حجز دكتور , عيادات المتحده , مواعيد عيادات, حجز المتحده اونلاين, اطباء السويس"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="المتحده الطبيه التخصصيه" />
+    <meta name="theme-color" content="#1fa79a" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <!-- waiting update this file -->
+    <!-- <link rel="stylesheet" href="css/all.min.css" /> -->
+
+    <link rel="icon" href="img/favicon/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="img/favicon/favicon-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="img/favicon/favicon-192.png"
+    />
+    <!-- google fonts  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="apple-touch-icon" href="img/favicon/favicon-180.png" />
+    <link rel="stylesheet" href="css/loader.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- تحميل الصفحات  اللوجو-->
+    <!-- يتم تكراره في كل صفحات الموقع -->
+    <div id="preloader" class="active">
+      <div class="loader-wrapper">
+        <div class="loader">
+          <div class="square teal"></div>
+          <div class="square yellow"></div>
+          <div class="square dark"></div>
+        </div>
+
+        <div class="clinic-name">
+          <span class="arabic-name"> المتحده الطبيه التخصصيه </span>
+
+          <span class="english-name"> United Medical Specialist </span>
+        </div>
+      </div>
+    </div>
+    <!-- محتويات الصفحه -->
+    <!-- start header -->
+    <div class="header" id="header">
+      <div class="container">
+        <ul class="main-nav">
+          <li>
+            <a href="#"> <i class=""></i>سجل حجوزاتي</a>
+          </li>
+          <li>
+            <a href="#available-doctors"> <i class=""></i>أطباء اليوم</a>
+          </li>
+          <li>
+            <a href="#about"> <i class=""></i>عن المركز</a>
+          </li>
+          <li>
+            <a href="#contracts"> <i class=""></i>التعاقدات</a>
+          </li>
+
+          <li>
+            <a href="#"> <i class=""></i>أخري</a>
+            <div class="mega-menu">
+              <ul class="links">
+                <li>
+                  <a href="#"
+                    ><i class="far fa-comments fa-fw"></i> link number one</a
+                  >
+                </li>
+                <li>
+                  <a href="#"><i class="far fa-user fa-fw"></i> أخري</a>
+                </li>
+                <li>
+                  <a href="#"><i class="far fa-building fa-fw"></i> أخري</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <a href="#home" class="logo"><img src="img/logo.jpg" alt="" /></a>
+      </div>
+    </div>
+    <div class="landing" id="landing">
+      <div class="container">
+        <div class="form">
+          <form id="bookingForm">
+            <!-- التخصص -->
+            <div class="input-group">
+              <i class="fa-solid fa-stethoscope"></i>
+              <select id="specialty" required>
+                <option disabled selected>اختر التخصص</option>
+                <!-- <option>قلب</option>
+                <option>عظام</option>
+                <option>عيون</option> -->
+              </select>
+            </div>
+
+            <!-- الطبيب -->
+            <div class="input-group">
+              <i class="fa-solid fa-user-doctor"></i>
+              <select id="doctor" required disabled>
+                <option value="" disabled selected>اختر الطبيب</option>
+                <!-- <option>د / أحمد علي</option>
+                <option>د / محمد حسن</option> -->
+              </select>
+            </div>
+
+            <!-- زرار -->
+            <button type="submit">احجز الآن</button>
+          </form>
+        </div>
+        <div class="text">
+          <h1>عيادات المتحده الطبيه التخصصيه ترحب بكم</h1>
+          <p>
+            تضم المتحده الطبية التخصصية قسم الطوارئ والمجهز لخدمة المرضي ( 24
+            ساعة ) شامل كافة التحاليل والفحوصات قسم الموجات الفوق صوتية (
+            السونار ) ...
+          </p>
+        </div>
+      </div>
+
+      <a href="#available-doctors" class="go-down">
+        <p>عرض أطباء اليوم</p>
+        <i class="fas fa-angle-double-down fa-2x"></i>
+      </a>
+    </div>
+    <div id="available-doctors">
+      <div class="container">
+        <h2>أطباء المتحده اليوم</h2>
+        <!-- Filters -->
+        <div class="specialties-filter" id="specialtiesFilter"></div>
+
+        <!-- Doctors List -->
+        <div class="doctors-list" id="doctorsList"></div>
+      </div>
+    </div>
+    <div id="about" class="about">
+      <div class="container">
+        <div class="content">
+          <div class="text">
+            <h2>عن المركز</h2>
+            <h3>رعاية طبية موثوقة بأحدث التقنيات</h3>
+            <p>
+              نحن نقدم خدمات طبية متكاملة بأعلى معايير الجودة، مع فريق من
+              الأطباء المتخصصين لضمان أفضل تجربة علاجية للمرضى.
+            </p>
+            <a href="tel:01227004614" class="btn-call">
+              <i class="fa-solid fa-phone-volume"></i>
+              تواصل معنا
+            </a>
+          </div>
+          <div class="media">
+            <!-- <video
+              autoplay
+              loop
+              muted
+              src=""
+            ></video> -->
+            <iframe
+              src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2F100092243181538%2Fvideos%2F1574843686503726%2F&show_text=false&width=560&t=0"
+              width="560"
+              height="314"
+              style="border: none; overflow: hidden"
+              scrolling="no"
+              frameborder="0"
+              allowfullscreen="true"
+              allow="
+                autoplay;
+                clipboard-write;
+                encrypted-media;
+                picture-in-picture;
+                web-share;
+              "
+              allowfullscreen="true"
+            ></iframe>
+            <div class="overlay"></div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <i class="fa-solid fa-user-doctor"></i>
+            <h4>+50</h4>
+            <p>طبيب متخصص</p>
+          </div>
+
+          <div class="stat">
+            <i class="fa-solid fa-users"></i>
+            <h4>+10K</h4>
+            <p>مريض سنوياً</p>
+          </div>
+
+          <div class="stat">
+            <i class="fa-solid fa-clock"></i>
+            <h4>+15</h4>
+            <p>سنة خبرة</p>
+          </div>
+
+          <div class="stat">
+            <i class="fa-solid fa-hospital"></i>
+            <h4>+20</h4>
+            <p>تخصص طبي</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section id="contracts" class="contracts">
+      <div class="container">
+        <h2>شركاء النجاح</h2>
+        <p class="subtitle">
+          نفخر بثقة <span>+50</span> جهة وشركة في خدماتنا الطبية
+        </p>
+        <div class="logos">
+          <div class="logos-track">
+            <div class="img">
+              <img src="img/logo.jpg" />
+              <p class="company-name">شركه 1</p>
+            </div>
+            <div class="img">
+              <img src="img/logo.jpg" />
+              <p class="company-name">شركه 2</p>
+            </div>
+            <div class="img">
+              <img src="img/logo.jpg" />
+              <p class="company-name">شركه 3</p>
+            </div>
+            <div class="img">
+              <img src="img/logo.jpg" />
+              <p class="company-name">شركه 4</p>
+            </div>
+            <div class="img">
+              <img src="img/logo.jpg" />
+              <p class="company-name">شركه 5</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><footer class="footer">
+  <div class="footer-container">
+
+    <!-- Logo + About -->
+    <div class="footer-col">
+      <h2 class="logo">المتحده الطبيه التخصصيه</h2>
+      <p>نقدم أفضل الخدمات الطبية بأعلى جودة واهتمام بصحة المرضى.</p>
+      <p>نعمل 24 ساعه</p>
+    </div>
+
+    <!-- Links -->
+    <div class="footer-col">
+      <h3>روابط سريعة</h3>
+      <ul>
+        <li><a href="#landing">أحجز الان</a></li>
+        <li><a href="#available-doctors">الأطباء</a></li>
+        <li><a href="#about">عن المركز</a></li>
+        <li><a href="#contracts">التعاقدات</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="footer-col">
+      <h3>تواصل معنا</h3>
+      <p>📞 011 15864675 </p>
+      <p>📍 مسجد حمزة بن عبدالمطلب - الدور الارضي - الصباح - السويس, Suez, Egypt</p>
+      <p>✉ elmotahida.clinics@gmail.com</p>
+    </div>
+
+  </div>
+
+  <!-- Social -->
+  <div class="footer-social">
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-whatsapp"></i></a>
+    <a href="#"><i class="fab fa-instagram"></i></a>
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-bottom">
+    <p>© 2026 جميع الحقوق محفوظة <span> Ahmed Khaled</span></p>
+  </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/loader.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

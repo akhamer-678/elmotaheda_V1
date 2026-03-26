@@ -1,0 +1,167 @@
+/* تنسيقات صفحة الحجز  */
+
+.booking {
+  background: var(--color-bg-section);
+}
+
+.back-btn {
+  margin: 15px 0;
+}
+
+.back-btn a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.back-btn a i {
+  transition: 0.3s;
+}
+
+/* Hover */
+.back-btn a:hover {
+  color: var(--btn-primary-hover);
+}
+
+.back-btn a:hover i {
+  transform: translateX(5px);
+}
+.doctor-card {
+  background-color: var(--color-primary);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.doctor-card h2 {
+  margin: 0 0 10px;
+  font-size: 26px;
+  color: var(--color-text);
+}
+
+.doctor-card p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+form.booking-form {
+  background-color: #fff;
+  padding: 20px;
+  padding-top: 10px;
+  padding-bottom: 0;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+form.booking-form label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+}
+
+form.booking-form input,
+form.booking-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.available-times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .available-times {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 مربعات في الصف */
+    gap: 10px;
+  }
+}
+
+.available-times button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--btn-primary);
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+@media (max-width: 767px) {
+  .available-times button {
+    padding: 12px 5px;
+    font-size: 14px;
+    border-radius: 6px;
+  }
+}
+
+.available-times button.selected,
+.available-times button:hover {
+  background-color: var(--btn-accent);
+}
+
+.submit-btn {
+  display: block;
+  margin: 30px auto;
+  width: 70%;
+  padding: 12px 25px;
+  font-size: 28px;
+  background-color: var(--btn-accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: var(--btn-accent-hover);
+}
+.landing .form select.input-error {
+  border-color: red;
+  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+}
+
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.error {
+  background: #e74c3c;
+}
+#message{
+  font-size: 22px;
+  text-align: center;
+  color: var(--color-text);
+  font-weight: 700;
+  margin: 100px auto;
+}
