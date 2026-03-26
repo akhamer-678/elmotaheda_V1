@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   if (!doctorId) {
     alert("يجب أختيار الطبيب أولا");
-    window.location.href = "main.html";
+    window.location.href = "index.html";
     return;
   }
 
