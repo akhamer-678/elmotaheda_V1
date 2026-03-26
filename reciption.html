@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الأستقبال</title>
+    <meta
+      name="description"
+      content="المتحده الطبيه التخصصيه مركز طبي متكامل في السويس يقدم خدمات الكشف الطبي والأشعة والتحاليل الطبية مع أفضل الأطباء وإمكانية حجز المواعيد أونلاين بسهولة."
+    />
+    <meta
+      name="keywords"
+      content="حجز دكتور , عيادات المتحده , مواعيد عيادات, حجز المتحده اونلاين, اطباء السويس"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="المتحده الطبيه التخصصيه" />
+    <meta name="theme-color" content="#1fa79a" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/all.min.css" />
+
+    <link rel="icon" href="img/favicon/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="img/favicon/favicon-32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="img/favicon/favicon-192.png"
+    />
+    <!-- google fonts  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="apple-touch-icon" href="img/favicon/favicon-180.png" />
+    <link rel="stylesheet" href="css/loader.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/reciption.css" />
+  </head>
+  <body>
+    <!-- تحميل الصفحات  اللوجو-->
+    <!-- يتم تكراره في كل صفحات الموقع -->
+    <div id="preloader" class="active">
+      <div class="loader-wrapper">
+        <div class="loader">
+          <div class="square teal"></div>
+          <div class="square yellow"></div>
+          <div class="square dark"></div>
+        </div>
+
+        <div class="clinic-name">
+          <span class="arabic-name"> المتحده الطبيه التخصصيه </span>
+
+          <span class="english-name"> United Medical Specialist </span>
+        </div>
+      </div>
+    </div>
+    <!-- محتوى صفحه الاستقبال  -->
+    <div class="header">
+      <div class="container">
+        <h2>لوحة الاستقبال</h2>
+        <img src="img/logo.jpg" alt="" />
+      </div>
+    </div>
+    <div class="admin-page">
+
+      <!-- Filters -->
+      <div class="filters">
+        <select id="specialtyFilter">
+          <option value="">كل التخصصات</option>
+        </select>
+
+        <select id="doctorFilter">
+          <option value="">كل الأطباء</option>
+        </select>
+
+        <input type="date" id="dateFilter" />
+
+        <select id="statusFilter">
+          <option value="pending">Pending</option>
+          <option value="">All Status</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="attended">Attended</option>
+          <option value="canceled">Canceled</option>
+        </select>
+
+        <input type="text" id="searchInput" placeholder="بحث بالاسم أو الموبايل">
+        <button id="exportBtn">Export Excel</button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>التخصص</th>
+              <th>الدكتور</th>
+              <th id="sortDate">الموعد ⬍</th>
+              <th>المريض</th>
+              <th>الهاتف</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+    <script src="js/loader.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/reception.js"></script>
+  </body>
+</html>
