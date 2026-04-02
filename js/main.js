@@ -154,7 +154,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     doctorsList.innerHTML = "";
 
     if (doctors.length === 0) {
-      doctorsList.innerHTML = "<p>لا يوجد أطباء اليوم</p>";
+      doctorsList.innerHTML = `
+      <div class = " no_doctor">
+        <P>لا يوجد أطباء اليوم</p>
+      </div>
+      `;
       return;
     }
 
@@ -162,14 +166,18 @@ document.addEventListener("DOMContentLoaded", async function () {
       const card = document.createElement("div");
 
       card.className = "doctor-card";
+      const statusText = doc.hasAvailable
+        ? "متاح اليوم"
+        : "مواعيد اليوم مكتملة";
 
       card.innerHTML = `
         <img src="img/visitor.jpg" alt="doctor" />
         <h3>د. ${doc["doc_name"]}</h3>
         <p>${doc["doc_title"]}</p>
-        <span class="status available">متاح اليوم</span>
-        <span class="time">من ${formatTime(doc.date)}</span>
-        <button onclick="goToBooking('${doc.id}')">احجز الآن</button>
+        <span class="status ${doc.hasAvailable ? "available" : "full"}">${statusText}</span>
+        <span class="time">${doc.hasAvailable ? `من ${formatTime(doc.date)}` : ""}</span>
+    ${doc.hasAvailable ? `<button onclick="goToBooking('${doc.id}')">احجز الآن</button>` : ""}
+
       `;
 
       doctorsList.appendChild(card);

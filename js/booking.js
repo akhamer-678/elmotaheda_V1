@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const params = new URLSearchParams(window.location.search);
   const doctorId = params.get("doctor_id");
 
-  if (!doctorId) {
+  if (!doctorId || doctorId === "اختر الطبيب") {
     alert("يجب أختيار الطبيب أولا");
     window.location.href = "index.html";
     return;
@@ -50,79 +50,83 @@ document.addEventListener("DOMContentLoaded", async function () {
   doctorTitle.textContent = doctor["doc_title"];
   doctorSpecialty.textContent = "التخصص: " + doctor.specialties["spcial_name"];
 
-  // ================= 2️⃣ المواعيد =================
-  const { data: schedules, error: schError } = await mysupabase
-    .from("doc_schedual")
-    .select("*")
-    .eq("doc_id", doctorId);
+const { data: schedules, error: schError } = await mysupabase
+  .from("doc_schedual")
+  .select("*")
+  .eq("doc_id", doctorId);
 
-  if (schError) {
-    console.error(schError);
-    return;
-  }
+if (schError) {
+  console.error(schError);
+  return;
+}
 
-  timesContainer.innerHTML = "";
+const today = new Date();
+today.setHours(0, 0, 0, 0);
 
-  if (!schedules || schedules.length === 0) {
-    message.innerHTML = `<p>لا توجد مواعيد متاحة حالياً</p>`;
-    form.style.display = "none";
-    return;
-  }
+const validSchedules = schedules.filter(s => {
+  if (!s.date) return false;
+  const scheduleDate = new Date(s.date);
+  return scheduleDate >= today;
+});
 
-  // ================= عرض المواعيد =================
-  let hasAvailable = false;
+timesContainer.innerHTML = "";
 
-  for (const slot of schedules) {
-    // 🟢 احسب العدد الحقيقي من bookings
-    const { count } = await mysupabase
-      .from("bookings")
-      .select("*", { count: "exact", head: true })
-      .eq("slot_id", slot.id)
-      .in("status", ["confirmed", "attended"]);
+if (!validSchedules || validSchedules.length === 0) {
+  message.innerHTML = `<p>لا توجد مواعيد متاحة حالياً</p>`;
+  form.style.display = "none";
+  return;
+}
 
-    // 🟢 check max
-    if (slot.max_patients && count >= slot.max_patients) return;
+// ================= عرض المواعيد =================
+let hasAvailable = false;
 
-    hasAvailable = true;
+for (const slot of validSchedules) {
+  const { count } = await mysupabase
+    .from("bookings")
+    .select("*", { count: "exact", head: true })
+    .eq("slot_id", slot.id)
+    .in("status", ["confirmed", "attended"]);
 
-    const btn = document.createElement("button");
-    btn.type = "button";
+  // تخطي المواعيد المكتملة فقط
+  if (slot.max_patients && count >= slot.max_patients) continue;
 
-    const dateObj = new Date(slot.date);
+  hasAvailable = true;
 
-    const formattedDate = dateObj.toLocaleDateString("ar-EG", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-    });
+  const btn = document.createElement("button");
+  btn.type = "button";
 
-    const formattedTime = dateObj.toLocaleTimeString("ar-EG", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  const dateObj = new Date(slot.date);
 
-    btn.textContent = `${formattedDate} - ${formattedTime}`;
+  const formattedDate = dateObj.toLocaleDateString("ar-EG", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
 
-    // اختيار الموعد
-    btn.addEventListener("click", () => {
-      document
-        .querySelectorAll(".available-times button")
-        .forEach((b) => b.classList.remove("selected"));
+  const formattedTime = dateObj.toLocaleTimeString("ar-EG", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-      btn.classList.add("selected");
+  btn.textContent = `${formattedDate} - ${formattedTime}`;
 
-      selectedSlotId = slot.id;
-      selectedSlotData = slot;
-    });
+  btn.addEventListener("click", () => {
+    document
+      .querySelectorAll(".available-times button")
+      .forEach(b => b.classList.remove("selected"));
 
-    timesContainer.appendChild(btn);
-  }
+    btn.classList.add("selected");
+    selectedSlotId = slot.id;
+    selectedSlotData = slot;
+  });
 
-  if (!hasAvailable) {
-    message.innerHTML = `<p>لا توجد مواعيد متاحة حالياً</p>`;
-    form.style.display = "none";
-  }
+  timesContainer.appendChild(btn);
+}
 
+if (!hasAvailable) {
+  message.innerHTML = `<p>نأسف .. تم أكتمال حالات الكشف</p>`;
+  form.style.display = "none";
+}
   // ================= Toast =================
   function showToast(text, type = "success") {
     const toast = document.getElementById("toast");

@@ -449,6 +449,14 @@ ul {
     margin-top: 5px;
   }
 }
+.no_doctor{
+
+  font-size: 22px;
+  text-align: center;
+  color: var(--color-text);
+  font-weight: 700;
+  margin: 100px auto;
+}
 
 /* Card */
 .doctor-card {
