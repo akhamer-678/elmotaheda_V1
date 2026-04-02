@@ -3,6 +3,7 @@ const supabaseClient = supabase.createClient(
   "https://rfwylqnkkaxaapinapaz.supabase.co",
   "sb_publishable_xfBrhWGol1KRKURhE_5a6w_Mm6iSLUj",
 );
+
 // ================== STATE ==================
 let allData = [];
 let filteredData = [];
@@ -16,19 +17,25 @@ let sortAsc = true;
 // ================== FETCH ==================
 async function fetchData() {
   try {
-    const { data: bookings } = await supabaseClient.from("bookings").select("*");
+    const { data: bookings } = await supabaseClient
+      .from("bookings")
+      .select("*");
     const { data: doctors } = await supabaseClient.from("doctors").select("*");
-    const { data: specialties } = await supabaseClient.from("specialties").select("*");
-    const { data: schedules } = await supabaseClient.from("doc_schedual").select("*");
+    const { data: specialties } = await supabaseClient
+      .from("specialties")
+      .select("*");
+    const { data: schedules } = await supabaseClient
+      .from("doc_schedual")
+      .select("*");
 
     doctorsList = doctors || [];
     specialtiesList = specialties || [];
     schedulesList = schedules || [];
 
-    allData = (bookings || []).map(b => {
-      const slot = schedulesList.find(s => s.id === b.slot_id);
-      const doc = doctorsList.find(d => d.id === slot?.doc_id);
-      const spec = specialtiesList.find(s => s.id === doc?.special_id);
+    allData = (bookings || []).map((b) => {
+      const slot = schedulesList.find((s) => s.id === b.slot_id);
+      const doc = doctorsList.find((d) => d.id === slot?.doc_id);
+      const spec = specialtiesList.find((s) => s.id === doc?.special_id);
 
       return {
         id: b.id,
@@ -39,13 +46,12 @@ async function fetchData() {
         doctor: doc?.doc_name || "-",
         doc_id: doc?.id,
         specialty: spec?.spcial_name || "-",
-        spec_id: spec?.id
+        spec_id: spec?.id,
       };
     });
 
     initFilters();
     applyFilters();
-
   } catch (err) {
     console.error(err);
   }
@@ -57,7 +63,7 @@ function initFilters() {
   const docEl = document.getElementById("doctorFilter");
 
   specEl.innerHTML = `<option value="">كل التخصصات</option>`;
-  specialtiesList.forEach(s => {
+  specialtiesList.forEach((s) => {
     specEl.innerHTML += `<option value="${s.id}">${s.spcial_name}</option>`;
   });
 
@@ -66,22 +72,40 @@ function initFilters() {
 
     docEl.innerHTML = `<option value="">كل الأطباء</option>`;
     doctorsList
-      .filter(d => !specId || d.special_id == specId)
-      .forEach(d => {
+      .filter((d) => !specId || d.special_id == specId)
+      .forEach((d) => {
         docEl.innerHTML += `<option value="${d.id}">${d.doc_name}</option>`;
       });
 
     applyFilters();
   };
 
-  document.querySelectorAll(".filters select, .filters input")
-    .forEach(el => el.addEventListener("change", applyFilters));
+  document
+    .querySelectorAll(".filters select, .filters input")
+    .forEach((el) => el.addEventListener("change", applyFilters));
 }
 
 // ================== APPLY FILTERS ==================
-function formatDateOnly(dateStr) {
+function formatDateTime(dateStr) {
   if (!dateStr) return "";
-  return new Date(dateStr).toISOString().split("T")[0];
+  const date = new Date(dateStr);
+  return date.toLocaleString("ar-EG", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+function formatDateForFilter(dateStr) {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`; // YYYY-MM-DD
 }
 
 function applyFilters() {
@@ -91,14 +115,15 @@ function applyFilters() {
   const status = document.getElementById("statusFilter")?.value;
   const search = document.getElementById("searchInput")?.value?.toLowerCase();
 
-  filteredData = allData.filter(item =>
-    (!specId || item.spec_id == specId) &&
-    (!docId || item.doc_id == docId) &&
-    (!date || formatDateOnly(item.date) === date) && 
-    (!status || item.status === status) &&
-    (!search ||
-      item.patient.toLowerCase().includes(search) ||
-      item.phone.includes(search))
+  filteredData = allData.filter(
+    (item) =>
+      (!specId || item.spec_id == specId) &&
+      (!docId || item.doc_id == docId) &&
+      (!date || formatDateForFilter(item.date) === date) &&
+      (!status || item.status === status) &&
+      (!search ||
+        item.patient.toLowerCase().includes(search) ||
+        item.phone.includes(search)),
   );
 
   renderTable();
@@ -114,24 +139,20 @@ function renderTable() {
     return;
   }
 
-  filteredData.forEach(item => {
+  filteredData.forEach((item) => {
     tbody.innerHTML += `
       <tr>
         <td>${item.specialty}</td>
         <td>${item.doctor}</td>
-        <td>${item.date}</td>
+        <td>${formatDateTime(item.date)}</td>
         <td>${item.patient}</td>
         <td>${item.phone}</td>
-
         <td>
-          <span class="status-badge ${item.status}">
-            ${item.status}
-          </span>
-
+          <span class="status-badge ${item.status}">${item.status}</span>
           <div class="actions">
-            <button onclick="updateStatus('${item.id}', 'confirmed')">✔</button>
-            <button onclick="updateStatus('${item.id}', 'attended')">👨‍⚕️</button>
-            <button onclick="updateStatus('${item.id}', 'canceled')">✖</button>
+            <button onclick="updateStatusAndSend(allData.find(i => i.id==='${item.id}'), 'confirmed')">✔</button>
+            <button onclick="updateStatusAndSend(allData.find(i => i.id==='${item.id}'), 'attended')">👨‍⚕️</button>
+            <button onclick="updateStatusAndSend(allData.find(i => i.id==='${item.id}'), 'canceled')">✖</button>
           </div>
         </td>
       </tr>
@@ -139,35 +160,105 @@ function renderTable() {
   });
 }
 
-// ================== UPDATE ==================
-async function updateStatus(id, newStatus) {
-  const { error } = await supabaseClient
-    .from("bookings")
-    .update({ status: newStatus })
-    .eq("id", id);
+// ================== SEND WHATSAPP POPUP ==================
+function sendWhatsAppPopup(phone, message) {
+  if (!phone || !message) return;
 
-  if (error) {
-    showToast("فشل التحديث ❌");
-    return;
+  let formattedPhone = phone.replace(/\D/g, "");
+  if (formattedPhone.startsWith("0"))
+    formattedPhone = "20" + formattedPhone.substring(1);
+  if (!formattedPhone.startsWith("2")) formattedPhone = "20" + formattedPhone;
+
+  const url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+
+  const width = 800;
+  const height = 600;
+  const left = screen.width / 2;
+  const top = screen.height / 2 - height / 2;
+
+  window.open(
+    url,
+    "_blank",
+    `toolbar=no, location=no, directories=no, status=no, menubar=no,
+     scrollbars=yes, resizable=yes, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`,
+  );
+}
+
+// ================== GET WHATSAPP MESSAGE ==================
+function getWhatsAppMessage(item, status) {
+  const dateFormatted = new Date(item.date).toLocaleString("ar-EG", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  if (status === "confirmed") {
+    return `أهلاً ${item.patient} 
+تم تأكيد حجزك بنجاح 
+
+ الدكتور: ${item.doctor}
+ التاريخ: ${dateFormatted}
+
+يرجى الحضور قبل الموعد بـ 10 دقائق 
+
+*عيادات المتحدة الطبية تتمنى لكم الشفاء العاجل!*`;
   }
 
-  const item = allData.find(i => i.id == id);
-  if (item) item.status = newStatus;
+  if (status === "canceled") {
+    return `أهلاً ${item.patient} 
+نعتذر، تم إلغاء الحجز الخاص بك 
 
-  showToast("تم التحديث ✅");
-  applyFilters();
+ الدكتور: ${item.doctor}
+ التاريخ: ${dateFormatted}
+
+يرجى التواصل معنا لإعادة الحجز 
+
+*عيادات المتحدة الطبية تتمنى لكم الشفاء العاجل!*`;
+  }
+
+  return "";
+}
+
+// ================== UPDATE STATUS + WHATSAPP ==================
+async function updateStatusAndSend(item, newStatus) {
+  if (!item) return;
+
+  try {
+    const { error } = await supabaseClient
+      .from("bookings")
+      .update({ status: newStatus })
+      .eq("id", item.id);
+
+    if (error) {
+      showToast("فشل التحديث ❌");
+      return;
+    }
+
+    item.status = newStatus;
+    showToast("تم التحديث ✅");
+
+    if (newStatus === "confirmed" || newStatus === "canceled") {
+      const message = getWhatsAppMessage(item, newStatus);
+      sendWhatsAppPopup(item.phone, message);
+    }
+
+    applyFilters();
+  } catch (err) {
+    console.error(err);
+    showToast("حدث خطأ أثناء التحديث ❌");
+  }
 }
 
 // ================== SORT ==================
 document.getElementById("sortDate").onclick = () => {
   sortAsc = !sortAsc;
-
   filteredData.sort((a, b) =>
     sortAsc
       ? new Date(a.date) - new Date(b.date)
-      : new Date(b.date) - new Date(a.date)
+      : new Date(b.date) - new Date(a.date),
   );
-
   renderTable();
 };
 
@@ -190,9 +281,11 @@ function showToast(msg) {
 // ================== REALTIME ==================
 supabaseClient
   .channel("bookings")
-  .on("postgres_changes", { event: "*", schema: "public", table: "bookings" }, () => {
-    fetchData();
-  })
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "bookings" },
+    () => fetchData(),
+  )
   .subscribe();
 
 // ================== START ==================

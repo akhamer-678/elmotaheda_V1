@@ -3,6 +3,8 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  /* font-variant-emoji: emoji; */
+
 }
 :root {
   --main-transition: 0.3s;
@@ -42,6 +44,7 @@ html {
 }
 body {
   font-family: "Tajawal", "Inter", system-ui, sans-serif;
+
 }
 a {
   text-decoration: none;

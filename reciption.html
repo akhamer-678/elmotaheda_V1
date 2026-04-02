@@ -82,7 +82,6 @@
       </div>
     </div>
     <div class="admin-page">
-
       <!-- Filters -->
       <div class="filters">
         <select id="specialtyFilter">
@@ -96,14 +95,18 @@
         <input type="date" id="dateFilter" />
 
         <select id="statusFilter">
-          <option value="pending">Pending</option>
-          <option value="">All Status</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="attended">Attended</option>
-          <option value="canceled">Canceled</option>
+          <option value="pending">قيد الانتظار</option>
+          <option value="">الكل</option>
+          <option value="confirmed">حضر</option>
+          <option value="attended">تم الكشف</option>
+          <option value="canceled">ملغي</option>
         </select>
 
-        <input type="text" id="searchInput" placeholder="بحث بالاسم أو الموبايل">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="بحث بالاسم أو الموبايل"
+        />
         <button id="exportBtn">Export Excel</button>
       </div>
 

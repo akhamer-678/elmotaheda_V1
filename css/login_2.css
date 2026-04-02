@@ -1,0 +1,180 @@
+:root {
+  --primary: #1abc9c;
+  --yellow: #f1c40f;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Cairo", sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+/* 🔥 Background Blobs */
+.bg-blur {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.blob {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  filter: blur(120px);
+  opacity: 0.5;
+  animation: move 20s infinite alternate ease-in-out;
+}
+
+.b1 {
+  background: var(--primary);
+  top: 10%;
+  right: 10%;
+}
+
+.b2 {
+  background: var(--yellow);
+  bottom: 10%;
+  left: 10%;
+  animation-delay: 3s;
+}
+
+.b3 {
+  background: #00c6ff;
+  top: 50%;
+  left: 50%;
+  animation-delay: 6s;
+}
+
+@keyframes move {
+  from { transform: translate(0,0); }
+  to { transform: translate(100px, -80px); }
+}
+
+/* Layout */
+.wrapper {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 40px;
+  color: white;
+}
+
+/* Branding */
+.brand {
+  max-width: 400px;
+}
+
+.brand img {
+  width: 90px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.4));
+}
+
+.brand h1 {
+  font-size: 34px;
+}
+
+.brand p {
+  opacity: 0.7;
+}
+
+/* 💎 Glass Card */
+.glass-card {
+  width: 350px;
+  padding: 40px;
+  border-radius: 25px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 0 20px rgba(255,255,255,0.05);
+
+  animation: fadeUp 1s ease;
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.glass-card h2 {
+  margin-bottom: 25px;
+}
+
+/* Inputs */
+.input {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.input input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.input label {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  color: #ccc;
+  transition: 0.3s;
+}
+
+.input input:focus + label,
+.input input:valid + label {
+  top: -10px;
+  font-size: 12px;
+  color: var(--primary);
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+
+  background: linear-gradient(45deg, var(--primary), #16a085);
+  color: white;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .wrapper {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .glass-card {
+    width: 90%;
+    margin-top: 30px;
+  }
+}

@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   // =========================
   // render
   // =========================
+
   function renderDoctors(doctors) {
     doctorsList.innerHTML = "";
 
@@ -161,8 +162,12 @@ document.addEventListener("DOMContentLoaded", async function () {
       `;
       return;
     }
-
+    const availabilityData =
+      JSON.parse(localStorage.getItem("doctorsAvailability")) || [];
+    console.log("doctorsList:", doctorsList);
     doctors.forEach((doc) => {
+      const stored = availabilityData.find((d) => d.id == doc.id);
+      doc.hasAvailable = stored ? stored.hasAvailable : false;
       const card = document.createElement("div");
 
       card.className = "doctor-card";
