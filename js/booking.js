@@ -1,4 +1,5 @@
 console.log("🔥 JS FILE LOADED");
+
 document.addEventListener("DOMContentLoaded", async function () {
   // ================= عناصر الصفحة =================
   const doctorName = document.getElementById("doctor-name");
@@ -26,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
 
-  // ================= 1️⃣ بيانات الدكتور =================
+  // ================= بيانات الدكتور =================
   const { data: doctor, error: docError } = await mysupabase
     .from("doctors")
     .select(
@@ -51,60 +52,54 @@ document.addEventListener("DOMContentLoaded", async function () {
   doctorTitle.textContent = doctor["doc_title"];
   doctorSpecialty.textContent = "التخصص: " + doctor.specialties["spcial_name"];
 
-  const { data: schedules, error: schError } = await mysupabase
-    .from("doc_schedual")
-    .select("*")
-    .eq("doc_id", doctorId);
-
-  if (schError) {
-    console.error(schError);
-    return;
-  }
-
+  // ================= جلب المواعيد من ال view =================
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const validSchedules = schedules.filter((s) => {
-    if (!s.date) return false;
-    const scheduleDate = new Date(s.date);
-    return scheduleDate >= today;
-  });
+  const { data: slots, error } = await mysupabase
+    .from("doctor_availability")
+    .select("*")
+    .eq("doc_id", doctorId)
+    .gte("date", today.toISOString()); // ✅ للتأكد من البيانات القادمة
 
-  timesContainer.innerHTML = "";
+  if (error) {
+    console.error(error);
+    message.innerHTML = `<p>حدث خطأ في تحميل المواعيد</p>`;
+    form.style.display = "none";
+    return;
+  }
 
-  if (!validSchedules || validSchedules.length === 0) {
+  if (!slots || slots.length === 0) {
     message.innerHTML = `<p>لا توجد مواعيد متاحة حالياً</p>`;
     form.style.display = "none";
     return;
   }
 
-  // ================= عرض المواعيد =================
   let hasAvailable = false;
 
-  for (const slot of validSchedules) {
-    const { count } = await mysupabase
-      .from("bookings")
-      .select("*", { count: "exact", head: true })
-      .eq("slot_id", slot.id)
-      .in("status", ["confirmed", "attended"]);
+  for (const slot of slots) {
+    // تحويل has_available إلى Boolean صريح
+    const available =
+      Boolean(slot.has_available) && slot.has_available !== "false";
 
-    //======== تخطي المواعيد المكتملة فقط======
-    if (slot.max_patients && count >= slot.max_patients) continue;
+    const slotDate = new Date(slot.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (!available || slotDate < today) continue;
 
     hasAvailable = true;
 
     const btn = document.createElement("button");
     btn.type = "button";
 
-    const dateObj = new Date(slot.date);
-
-    const formattedDate = dateObj.toLocaleDateString("ar-EG", {
+    const formattedDate = slotDate.toLocaleDateString("ar-EG", {
       weekday: "long",
       day: "numeric",
       month: "long",
     });
 
-    const formattedTime = dateObj.toLocaleTimeString("ar-EG", {
+    const formattedTime = slotDate.toLocaleTimeString("ar-EG", {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -117,7 +112,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         .forEach((b) => b.classList.remove("selected"));
 
       btn.classList.add("selected");
-      selectedSlotId = slot.id;
+      selectedSlotId = slot.slot_id;
       selectedSlotData = slot;
     });
 
@@ -128,35 +123,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     message.innerHTML = `<p>نأسف .. تم أكتمال حالات الكشف</p>`;
     form.style.display = "none";
   }
-  // ========تخزين حاله hasAvaliable LOCAL==========
 
-  let storedDoctors =
-    JSON.parse(localStorage.getItem("doctorsAvailability")) || [];
-
-  // شيل القديم لنفس الدكتور
-  storedDoctors = storedDoctors.filter((d) => d.id !== doctorId);
-
-  // ضيف الجديد
-  storedDoctors.push({
-    id: doctorId,
-    hasAvailable: hasAvailable,
-  });
-
-  // خزّن تاني
-  localStorage.setItem("doctorsAvailability", JSON.stringify(storedDoctors));
   // ================= Toast =================
   function showToast(text, type = "success") {
     const toast = document.getElementById("toast");
-
     toast.textContent = text;
     toast.className = `toast show ${type}`;
-
     setTimeout(() => {
       toast.classList.remove("show");
     }, 3000);
   }
-  console.log("Saved:", storedDoctors);
-  // ================= 3️⃣ الحجز =================
+
+  // ================= الحجز =================
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
@@ -165,7 +143,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    // 🟢 بيانات الفورم
     const patientName = document.getElementById("patient-name").value.trim();
     const patientPhone = document.getElementById("phone").value.trim();
     const paymentmethod = document.getElementById("payment").value.trim();
@@ -175,7 +152,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    // 🟢 منع التكرار
     const { data: existing } = await mysupabase
       .from("bookings")
       .select("id")
@@ -188,14 +164,12 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    // 🟢 احسب العدد الحالي
     const { count } = await mysupabase
       .from("bookings")
       .select("*", { count: "exact", head: true })
       .eq("slot_id", selectedSlotId)
       .in("status", ["confirmed", "attended"]);
 
-    // 🟢 check max
     if (
       selectedSlotData.max_patients &&
       count >= selectedSlotData.max_patients
@@ -204,7 +178,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    // 🟢 insert booking
     const { error: insertError } = await mysupabase.from("bookings").insert([
       {
         doctor_id: doctorId,
@@ -222,7 +195,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    // 🟢 format date/time
     const dateObj = new Date(selectedSlotData.date);
 
     const formattedDate = dateObj.toLocaleDateString("ar-EG", {
@@ -236,11 +208,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       minute: "2-digit",
     });
 
-    // 🟢 نجاح
     showToast(`تم الحجز ✅ ${formattedDate} - ${formattedTime}`);
-
     form.reset();
-
+    console.log(
+      "Slots raw:",
+      slots.map((s) => ({
+        slot_id: s.slot_id,
+        date: s.date,
+        has_available: s.has_available,
+      })),
+    );
     setTimeout(() => {
       window.location.href = `booking.html?doctor_id=${doctorId}`;
     }, 1500);

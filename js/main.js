@@ -4,23 +4,18 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-  // =========================
-  // عناصر الفورم
-  // =========================
   const specialtySelect = document.getElementById("specialty");
   const doctorSelect = document.getElementById("doctor");
   const form = document.getElementById("bookingForm");
 
-  // =========================
-  // عناصر سكشن الأطباء
-  // =========================
   const doctorsList = document.getElementById("doctorsList");
   const specialtiesFilter = document.getElementById("specialtiesFilter");
 
   let allDoctors = [];
+  let availabilityMap = {};
 
   // =========================
-  // تحميل التخصصات للفورم
+  // تحميل التخصصات
   // =========================
   const { data: specialties } = await supabaseClient
     .from("specialties")
@@ -34,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   // =========================
-  // تغيير التخصص (الفورم)
+  // تغيير التخصص (dropdown)
   // =========================
   specialtySelect.addEventListener("change", async function () {
     doctorSelect.innerHTML = `<option disabled selected>اختر الطبيب</option>`;
@@ -42,8 +37,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const { data: doctors } = await supabaseClient
       .from("doctors")
       .select("*")
-      .eq("special_id", this.value)
-      .eq("is_avaliable", true);
+      .eq("special_id", this.value);
 
     doctors.forEach((doc) => {
       const option = document.createElement("option");
@@ -56,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   // =========================
-  // submit الفورم
+  // submit
   // =========================
   form.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -72,9 +66,25 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   // =========================
-  // سكشن أطباء اليوم
+  // تحميل availability من view
   // =========================
+  const { data: availabilityData } = await supabaseClient
+    .from("doctor_availability")
+    .select("doc_id, has_available, date");
 
+  availabilityMap = {};
+
+  availabilityData.forEach((item) => {
+    if (item.has_available) {
+      availabilityMap[item.doc_id] = true;
+    } else if (!(item.doc_id in availabilityMap)) {
+      availabilityMap[item.doc_id] = false;
+    }
+  });
+
+  // =========================
+  // تحميل أطباء اليوم (من نفس الـ view)
+  // =========================
   doctorsList.innerHTML = "<p>جاري تحميل الأطباء...</p>";
 
   const todayStart = new Date();
@@ -84,31 +94,31 @@ document.addEventListener("DOMContentLoaded", async function () {
   todayEnd.setHours(23, 59, 59, 999);
 
   const { data, error } = await supabaseClient
-    .from("doc_schedual")
+    .from("doctor_availability")
     .select(
       `
-      date,
-      doctors (
-        id,
-        "doc_name",
-        "doc_title",
-        "special_id",
-        is_avaliable
-      )
-    `,
+    doc_id,
+    date,
+    has_available,
+    doctors (
+      id,
+      doc_name,
+      doc_title,
+      special_id
+    )
+  `,
     )
     .gte("date", todayStart.toISOString())
     .lte("date", todayEnd.toISOString());
-
-  console.log("JOIN RESULT:", data, error);
 
   if (error) {
     doctorsList.innerHTML = "<p>خطأ في تحميل البيانات</p>";
     return;
   }
 
+  // نجهز الدكاترة
   allDoctors = data
-    .filter((item) => item.doctors && item.doctors["is_avaliable"])
+    .filter((item) => item.doctors)
     .map((item) => ({
       ...item.doctors,
       date: item.date,
@@ -121,11 +131,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   allBtn.textContent = "الكل";
   allBtn.classList.add("active");
   allBtn.onclick = () => {
-    document
-      .querySelectorAll(".specialties-filter button")
-      .forEach((b) => b.classList.remove("active"));
-
-    allBtn.classList.add("active");
+    setActiveBtn(allBtn);
     renderDoctors(allDoctors);
   };
   specialtiesFilter.appendChild(allBtn);
@@ -135,54 +141,63 @@ document.addEventListener("DOMContentLoaded", async function () {
     btn.textContent = sp["spcial_name"];
 
     btn.onclick = () => {
-      document
-        .querySelectorAll(".specialties-filter button")
-        .forEach((b) => b.classList.remove("active"));
-
-      btn.classList.add("active");
-      const filtered = allDoctors.filter((doc) => doc["special_id"] == sp.id);
+      setActiveBtn(btn);
+      const filtered = allDoctors.filter((doc) => doc.special_id == sp.id);
       renderDoctors(filtered);
     };
 
     specialtiesFilter.appendChild(btn);
   });
 
-  // =========================
-  // render
-  // =========================
+  function setActiveBtn(activeBtn) {
+    document
+      .querySelectorAll(".specialties-filter button")
+      .forEach((b) => b.classList.remove("active"));
 
+    activeBtn.classList.add("active");
+  }
+
+  // =========================
+  // render (من DB مباشرة)
+  // =========================
   function renderDoctors(doctors) {
     doctorsList.innerHTML = "";
 
     if (doctors.length === 0) {
       doctorsList.innerHTML = `
-      <div class = " no_doctor">
-        <P>لا يوجد أطباء اليوم</p>
-      </div>
+        <div class="no_doctor">
+          <p>لا يوجد أطباء اليوم</p>
+        </div>
       `;
       return;
     }
-    const availabilityData =
-      JSON.parse(localStorage.getItem("doctorsAvailability")) || [];
-    console.log("doctorsList:", doctorsList);
-    doctors.forEach((doc) => {
-      const stored = availabilityData.find((d) => d.id == doc.id);
-      doc.hasAvailable = stored ? stored.hasAvailable : false;
-      const card = document.createElement("div");
 
+    doctors.forEach((doc) => {
+      const hasAvailable = availabilityMap[doc.id] || false;
+
+      const card = document.createElement("div");
       card.className = "doctor-card";
-      const statusText = doc.hasAvailable
-        ? "متاح اليوم"
-        : "مواعيد اليوم مكتملة";
+
+      const statusText = hasAvailable ? "متاح اليوم" : "مواعيد اليوم مكتملة";
 
       card.innerHTML = `
         <img src="img/visitor.jpg" alt="doctor" />
-        <h3>د. ${doc["doc_name"]}</h3>
-        <p>${doc["doc_title"]}</p>
-        <span class="status ${doc.hasAvailable ? "available" : "full"}">${statusText}</span>
-        <span class="time">${doc.hasAvailable ? `من ${formatTime(doc.date)}` : ""}</span>
-    ${doc.hasAvailable ? `<button onclick="goToBooking('${doc.id}')">احجز الآن</button>` : ""}
+        <h3>د. ${doc.doc_name}</h3>
+        <p>${doc.doc_title}</p>
 
+        <span class="status ${hasAvailable ? "available" : "full"}">
+          ${statusText}
+        </span>
+
+        <span class="time">
+          ${hasAvailable ? `من ${formatTime(doc.date)}` : ""}
+        </span>
+
+        ${
+          hasAvailable
+            ? `<button onclick="goToBooking('${doc.id}')">احجز الآن</button>`
+            : ""
+        }
       `;
 
       doctorsList.appendChild(card);
@@ -199,10 +214,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
+  // =========================
+  // أول تحميل
+  // =========================
   renderDoctors(allDoctors);
 });
 
+// =========================
 // redirect
+// =========================
 function goToBooking(docId) {
   window.location.href = `booking.html?doctor_id=${docId}`;
 }
