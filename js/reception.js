@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ✅ لو تمام كمل شغلك
   fetchData();
-
 });
 
 //=========  logout function ==========
@@ -534,6 +533,25 @@ document.getElementById("exportBtn").addEventListener("click", () => {
 
   const dateText = date || "-";
 
+  // تعديلات نسخه الجدول للطباعه
+  const clonedTable = table.cloneNode(true);
+
+  // حذف العمود (مثلاً العمود الأخير)
+  clonedTable.querySelectorAll("tr").forEach((row) => {
+    if (row.cells.length > 1) {
+      row.deleteCell(row.cells.length - 2);
+    }
+  });
+  clonedTable.style.fontSize = "10px";
+
+  clonedTable.querySelectorAll("th, td").forEach((cell) => {
+    cell.style.padding = "4px";
+  });
+
+  clonedTable.querySelectorAll("tr").forEach((row) => {
+    row.style.height = "auto";
+  });
+
   const content = `
     <div style="text-align:center; margin-bottom:20px;">
       <img src="${logoUrl}" style="width:80px;height:80px;border-radius:10px;" />
@@ -556,7 +574,7 @@ document.getElementById("exportBtn").addEventListener("click", () => {
     </div>
 
     <div>
-      ${table.outerHTML}
+      ${clonedTable.outerHTML}
     </div>
   `;
 

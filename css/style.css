@@ -468,15 +468,15 @@ ul {
 /* Animations */
 .step1 {
   animation: fadeUp 1s ease forwards;
-  animation-delay: 1s;
+  animation-delay: 2.5s;
 }
 .step2 {
   animation: fadeUp 1s ease forwards;
-  animation-delay: 2s;
+  animation-delay: 3.5s;
 }
 .step3 {
   animation: fadeUp 1s ease forwards;
-  animation-delay: 3s;
+  animation-delay: 4.5s;
 }
 
 @keyframes fadeUp {

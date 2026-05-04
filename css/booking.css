@@ -73,6 +73,7 @@ form.booking-form select {
   border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 16px;
+  margin-top: 5px;
 }
 
 .available-times {
@@ -117,7 +118,8 @@ form.booking-form select {
 
 .submit-btn {
   display: block;
-  margin: 30px auto;
+  margin: auto;
+  margin-top: 30px;
   width: 70%;
   padding: 12px 25px;
   font-size: 28px;

@@ -176,8 +176,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("modal-doctor").textContent =
       "👨‍⚕️ الدكتور: " + data.doctor;
 
-    // document.getElementById("modal-date").textContent =
-    //   "📅 " + data.date + " - " + data.time;
+    document.getElementById("modal-date").textContent =
+      "📅 ميعاد الدكتور" + data.date + " - " + data.time;
 
     document.getElementById("modal-queue").textContent =
       "🔢 رقمك في الدور: " + data.queue;
@@ -277,15 +277,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
       }
 
-      // حساب عدد الطابور
-      // const { count: queueCount } = await mysupabase
-      //   .from("bookings")
-      //   .select("*", { count: "exact", head: true })
-      //   .eq("slot_id", selectedSlotId)
-      //   .in("type", ["walk_in", "online"])
-      //   .in("status", ["confirmed", "attended"]);
-
-      const { error: insertError } = await mysupabase
+      const { data: insertedData, error: insertError } = await mysupabase
         .from("bookings")
         .insert([
           {
@@ -298,12 +290,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             status: "confirmed",
             type: "online",
             priority: 2,
-            // queue_num: queueCount + 1,
           },
         ])
         .select();
-      
-      const insertedBooking = data[0]; // 👈 ده اللي كان ناقصك
+
+      const insertedBooking = insertedData[0]; // 👈 ده اللي كان ناقصك
 
       if (insertError) {
         console.error(insertError);
@@ -327,9 +318,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         doctor: doctor["doc_name"],
         date: formattedDate,
         time: formattedTime,
-        queue: insertedBooking.queue_num // ✅ الرقم الحقيقي
-
-        // queue: queueCount + 1,
+        queue: insertedBooking?.queue_num || "-", // ✅ الرقم الحقيقي
       });
 
       form.reset();

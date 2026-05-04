@@ -103,26 +103,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     return;
   }
   // =========================
-  //viewمن  availabilityتحميل  
+  //viewمن  availabilityتحميل
   // =========================
   availabilityMap = {};
-
-  availabilityData.forEach((item) => {
+  data.forEach((item) => {
     if (item.has_available) {
       availabilityMap[item.doc_id] = true;
     } else if (!(item.doc_id in availabilityMap)) {
       availabilityMap[item.doc_id] = false;
     }
   });
-  availabilityMap = {};
 
-  availabilityData.forEach((item) => {
-    if (item.has_available) {
-      availabilityMap[item.doc_id] = true;
-    } else if (!(item.doc_id in availabilityMap)) {
-      availabilityMap[item.doc_id] = false;
-    }
-  });
   // نجهز الدكاترة
   allDoctors = data
     .filter((item) => item.doctors)
