@@ -132,6 +132,10 @@ form.booking-form select {
 .submit-btn:hover {
   background-color: var(--btn-accent-hover);
 }
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .landing .form select.input-error {
   border-color: red;
   box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);

@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
   loadContracts();
 
-  // ================= Toast =================
+  // ================= Modal =================
 
   function showBookingModal(data) {
     const modal = document.getElementById("booking-modal");
@@ -176,8 +176,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("modal-doctor").textContent =
       "👨‍⚕️ الدكتور: " + data.doctor;
 
-    document.getElementById("modal-date").textContent =
-      "📅 " + data.date + " - " + data.time;
+    // document.getElementById("modal-date").textContent =
+    //   "📅 " + data.date + " - " + data.time;
 
     document.getElementById("modal-queue").textContent =
       "🔢 رقمك في الدور: " + data.queue;
@@ -213,111 +213,145 @@ document.addEventListener("DOMContentLoaded", async function () {
     setTimeout(() => div.remove(), 2000);
   }
   // ================= الحجز =================
+  let isSubmitting = false;
+
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    if (!selectedSlotId || !selectedSlotData) {
-      alert("اختار ميعاد الأول");
-      return;
+    if (isSubmitting) return; // 🔒 يمنع الدوسة التانية
+    isSubmitting = true;
+
+    const submitBtn = form.querySelector("button[type='submit']");
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerText = "جاري الحجز...";
     }
 
-    const patientName = document.getElementById("patient-name").value.trim();
-    const patientPhone = document.getElementById("phone").value.trim();
-    const paymentmethod = document.getElementById("payment").value.trim();
-    let contractId = null;
-    let paymentType = "cash"
-    if (paymentmethod !== "cash") {
-      contractId = paymentmethod;
-      paymentType = "contract"
+    try {
+      if (!selectedSlotId || !selectedSlotData) {
+        alert("اختار ميعاد الأول");
+        return;
+      }
+
+      const patientName = document.getElementById("patient-name").value.trim();
+      const patientPhone = document.getElementById("phone").value.trim();
+      const paymentmethod = document.getElementById("payment").value.trim();
+
+      let contractId = null;
+      let paymentType = "cash";
+
+      if (paymentmethod !== "cash") {
+        contractId = paymentmethod;
+        paymentType = "contract";
+      }
+
+      if (!patientName || !patientPhone) {
+        alert("من فضلك املأ البيانات");
+        return;
+      }
+
+      const { data: existing } = await mysupabase
+        .from("bookings")
+        .select("id")
+        .eq("slot_id", selectedSlotId)
+        .eq("patient_phone", patientPhone)
+        .eq("patient_name", patientName)
+        .in("status", ["attended", "confirmed"]);
+
+      if (existing.length > 0) {
+        alert("حجزت نفس الميعاد قبل كده");
+        return;
+      }
+
+      const { count } = await mysupabase
+        .from("bookings")
+        .select("*", { count: "exact", head: true })
+        .eq("slot_id", selectedSlotId)
+        .in("status", ["confirmed", "attended"]);
+
+      if (
+        selectedSlotData.max_patients &&
+        count >= selectedSlotData.max_patients
+      ) {
+        alert("الموعد اكتمل");
+        return;
+      }
+
+      // حساب عدد الطابور
+      // const { count: queueCount } = await mysupabase
+      //   .from("bookings")
+      //   .select("*", { count: "exact", head: true })
+      //   .eq("slot_id", selectedSlotId)
+      //   .in("type", ["walk_in", "online"])
+      //   .in("status", ["confirmed", "attended"]);
+
+      const { error: insertError } = await mysupabase
+        .from("bookings")
+        .insert([
+          {
+            doctor_id: doctorId,
+            slot_id: selectedSlotId,
+            patient_name: patientName,
+            patient_phone: patientPhone,
+            contract_id: contractId,
+            payment_method: paymentType,
+            status: "confirmed",
+            type: "online",
+            priority: 2,
+            // queue_num: queueCount + 1,
+          },
+        ])
+        .select();
+      
+      const insertedBooking = data[0]; // 👈 ده اللي كان ناقصك
+
+      if (insertError) {
+        console.error(insertError);
+        return;
+      }
+
+      const dateObj = new Date(selectedSlotData.date);
+
+      const formattedDate = dateObj.toLocaleDateString("ar-EG", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      });
+
+      const formattedTime = dateObj.toLocaleTimeString("ar-EG", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      showBookingModal({
+        doctor: doctor["doc_name"],
+        date: formattedDate,
+        time: formattedTime,
+        queue: insertedBooking.queue_num // ✅ الرقم الحقيقي
+
+        // queue: queueCount + 1,
+      });
+
+      form.reset();
+
+      console.log(
+        "Slots raw:",
+        slots.map((s) => ({
+          slot_id: s.slot_id,
+          date: s.date,
+          has_available: s.has_available,
+        })),
+      );
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    } finally {
+      // 🔓 دي أهم نقطة
+      isSubmitting = false;
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "احجز";
+      }
     }
-    if (!patientName || !patientPhone) {
-      alert("من فضلك املأ البيانات");
-      return;
-    }
-
-    const { data: existing } = await mysupabase
-      .from("bookings")
-      .select("id")
-      .eq("slot_id", selectedSlotId)
-      .eq("patient_phone", patientPhone)
-      .eq("patient_name", patientName)
-      .in("status", ["attended", "confirmed"]);
-
-    if (existing.length > 0) {
-      alert("حجزت نفس الميعاد قبل كده");
-      return;
-    }
-
-    const { count } = await mysupabase
-      .from("bookings")
-      .select("*", { count: "exact", head: true })
-      .eq("slot_id", selectedSlotId)
-      .in("status", ["confirmed", "attended"]);
-
-    if (
-      selectedSlotData.max_patients &&
-      count >= selectedSlotData.max_patients
-    ) {
-      alert("الموعد اكتمل");
-      return;
-    }
-    // حساب عدد الطابور
-    const { count: queueCount } = await mysupabase
-      .from("bookings")
-      .select("*", { count: "exact", head: true })
-      .eq("slot_id", selectedSlotId)
-      .in("type", ["walk_in", "online"])
-      .in("status", ["confirmed", "attended"]);
-    const { error: insertError } = await mysupabase.from("bookings").insert([
-      {
-        doctor_id: doctorId,
-        slot_id: selectedSlotId,
-        patient_name: patientName,
-        patient_phone: patientPhone,
-        contract_id: contractId,
-        payment_method: paymentType,
-        status: "confirmed",
-        type: "online",
-        priority: 2,
-        queue_num: queueCount + 1,
-      },
-    ]);
-
-    if (insertError) {
-      console.error(insertError);
-      // showToast("فشل الحجز", "error");
-      return;
-    }
-
-    const dateObj = new Date(selectedSlotData.date);
-
-    const formattedDate = dateObj.toLocaleDateString("ar-EG", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-    });
-
-    const formattedTime = dateObj.toLocaleTimeString("ar-EG", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    showBookingModal({
-      doctor: doctor["doc_name"],
-      date: formattedDate,
-      time: formattedTime,
-      queue: queueCount + 1,
-    });
-    form.reset();
-    console.log(
-      "Slots raw:",
-      slots.map((s) => ({
-        slot_id: s.slot_id,
-        date: s.date,
-        has_available: s.has_available,
-      })),
-    );
-    // setTimeout(() => {
-    //   window.location.href = `index.html`;
-    // }, 4000);
   });
 });

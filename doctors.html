@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>الأستقبال</title>
+    <title>مواعيد الاطباء</title>
     <meta
       name="description"
       content="المتحده الطبيه التخصصيه مركز طبي متكامل في السويس يقدم خدمات الكشف الطبي والأشعة والتحاليل الطبية مع أفضل الأطباء وإمكانية حجز المواعيد أونلاين بسهولة."
@@ -54,11 +54,9 @@
     <link rel="apple-touch-icon" href="img/favicon/favicon-180.png" />
     <link rel="stylesheet" href="css/loader.css" />
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/reciption.css" />
+    <link rel="stylesheet" href="css/doctors.css" />
   </head>
   <body>
-    <!-- تحميل الصفحات  اللوجو-->
-    <!-- يتم تكراره في كل صفحات الموقع -->
     <div id="preloader" class="active">
       <div class="loader-wrapper">
         <div class="loader">
@@ -74,66 +72,76 @@
         </div>
       </div>
     </div>
-    <!-- محتوى صفحه الاستقبال  -->
+    <!-- Header -->
     <div class="header">
       <div class="container">
-        <h2>لوحة الاستقبال</h2>
+        <button class="logout-btn" onclick="logout()">
+          خروج
+          <i class="fa-solid fa-power-off"></i>
+        </button>
+        <h2>الأدارة</h2>
         <img src="img/logo.jpg" alt="" />
       </div>
     </div>
-    <div class="admin-page">
-      <!-- Filters -->
-      <div class="filters">
-        <select id="specialtyFilter">
-          <option value="">كل التخصصات</option>
+    <button class="btn" onclick="openModal()">+ Add Schedule</button>
+
+    <!-- Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Day</th>
+          <th>Time</th>
+          <th>Max Patients</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Dr Ahmed</td>
+          <td>Monday</td>
+          <td>10:00 AM</td>
+          <td>50</td>
+          <td>
+            <button class="edit">Edit</button>
+            <button class="delete">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <h3>Add / Edit Schedule</h3>
+
+        <label>Doctor</label>
+        <select>
+          <option>Dr Ahmed</option>
+          <option>Dr Sara</option>
         </select>
 
-        <select id="doctorFilter">
-          <option value="">كل الأطباء</option>
+        <label>Day</label>
+        <select>
+          <option>Monday</option>
+          <option>Tuesday</option>
+          <option>Wednesday</option>
         </select>
 
-        <input type="date" id="dateFilter" />
+        <label>Time</label>
+        <input type="time" />
 
-        <select id="statusFilter">
-          <option value="pending">قيد الانتظار</option>
-          <option value="">الكل</option>
-          <option value="confirmed">حضر</option>
-          <option value="attended">تم الكشف</option>
-          <option value="canceled">ملغي</option>
-        </select>
+        <label>Max Patients</label>
+        <input type="number" value="50" />
 
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="بحث بالاسم أو الموبايل"
-        />
-        <button id="exportBtn">Export Excel</button>
+        <div class="actions">
+          <button class="btn save">Save</button>
+          <button class="btn cancel" onclick="closeModal()">Cancel</button>
+        </div>
       </div>
-
-      <!-- Table -->
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>التخصص</th>
-              <th>الدكتور</th>
-              <th id="sortDate">الموعد ⬍</th>
-              <th>المريض</th>
-              <th>الهاتف</th>
-              <th>الحالة</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
     <script src="js/loader.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/reception.js"></script>
+    <script src="js/doctors.js"></script>
   </body>
 </html>

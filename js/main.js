@@ -70,24 +70,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 
   // =========================
-  // تحميل availability من view
-  // =========================
-  const { data: availabilityData } = await supabaseClient
-    .from("doctor_availability")
-    .select("doc_id, has_available, date");
-
-  availabilityMap = {};
-
-  availabilityData.forEach((item) => {
-    if (item.has_available) {
-      availabilityMap[item.doc_id] = true;
-    } else if (!(item.doc_id in availabilityMap)) {
-      availabilityMap[item.doc_id] = false;
-    }
-  });
-
-  // =========================
-  // تحميل أطباء اليوم (من نفس الـ view)
+  // تحميل أطباء اليوم (viewمن الـ )
   // =========================
   doctorsList.innerHTML = "<p>جاري تحميل الأطباء...</p>";
 
@@ -119,7 +102,27 @@ document.addEventListener("DOMContentLoaded", async function () {
     doctorsList.innerHTML = "<p>خطأ في تحميل البيانات</p>";
     return;
   }
+  // =========================
+  //viewمن  availabilityتحميل  
+  // =========================
+  availabilityMap = {};
 
+  availabilityData.forEach((item) => {
+    if (item.has_available) {
+      availabilityMap[item.doc_id] = true;
+    } else if (!(item.doc_id in availabilityMap)) {
+      availabilityMap[item.doc_id] = false;
+    }
+  });
+  availabilityMap = {};
+
+  availabilityData.forEach((item) => {
+    if (item.has_available) {
+      availabilityMap[item.doc_id] = true;
+    } else if (!(item.doc_id in availabilityMap)) {
+      availabilityMap[item.doc_id] = false;
+    }
+  });
   // نجهز الدكاترة
   allDoctors = data
     .filter((item) => item.doctors)

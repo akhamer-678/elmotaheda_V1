@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحت الصيانة</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at top, #1e293b, #020617);
+    font-family: Arial, sans-serif;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* نجوم خفيفة في الخلفية */
+body::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: url('https://www.transparenttextures.com/patterns/stardust.png');
+    opacity: 0.08;
+    animation: moveBg 60s linear infinite;
+}
+
+@keyframes moveBg {
+    from { transform: translate(0,0); }
+    to { transform: translate(-200px,-200px); }
+}
+
+.container {
+    max-width: 400px;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 🔥 اللوجو + glow */
+.logo-wrapper {
+    display: inline-block;
+    padding: 15px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    box-shadow:
+        0 0 15px rgba(0, 200, 255, 0.4),
+        0 0 40px rgba(0, 200, 255, 0.2),
+        inset 0 0 10px rgba(255,255,255,0.1);
+    animation: pulseGlow 2.5s infinite alternate;
+}
+
+.logo-spinner {
+    width: 70px;
+    /* animation: spin 4s linear infinite; */
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* glow animation */
+@keyframes pulseGlow {
+    from {
+        box-shadow:
+            0 0 10px rgba(0, 200, 255, 0.3),
+            0 0 25px rgba(0, 200, 255, 0.15);
+    }
+    to {
+        box-shadow:
+            0 0 25px rgba(0, 200, 255, 0.6),
+            0 0 60px rgba(0, 200, 255, 0.3);
+    }
+}
+
+/* 🛠️ صورة الصيانة */
+.maintenance-img {
+    width: 170px;
+    margin: 25px auto;
+    animation: float 3s ease-in-out infinite;
+}
+
+/* float animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- 🔁 اللوجو بالجلو -->
+    <div class="loga">
+        <h1>المتحده الطبيه التخصصيه</h1>
+        <img src="img/favicon/favicon-512.png" class="logo-spinner">
+    </div>
+
+    <!-- 🛠️ صورة الصيانة -->
+    <img src="img/soon.png" class="maintenance-img">
+
+    <!-- 🧠 العنوان -->
+    <h1>🚧 الموقع تحت الصيانة</h1>
+
+
+
+</div>
+
+</body>
+</html>
