@@ -33,11 +33,9 @@ async function logout() {
 // ================== STATE ==================
 let allData = [];
 let filteredData = [];
-
 let doctorsList = [];
 let specialtiesList = [];
 let schedulesList = [];
-
 let sortAsc = true;
 
 // ================== FETCH ==================
@@ -117,15 +115,26 @@ function initFilters() {
 // ================== APPLY FILTERS ==================
 function formatDateTime(dateStr) {
   if (!dateStr) return "";
+
   const date = new Date(dateStr);
-  return date.toLocaleString("ar-EG", {
+
+  const dayName = date.toLocaleDateString("ar-EG", {
+    weekday: "long",
+  });
+
+  const datePart = date.toLocaleDateString("ar-EG", {
     year: "numeric",
     month: "numeric",
     day: "numeric",
+  });
+
+  const timePart = date.toLocaleTimeString("ar-EG", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
   });
+
+  return `${dayName} - ${datePart} - ${timePart}`;
 }
 
 function formatDateForFilter(dateStr) {
@@ -400,8 +409,13 @@ function initModalFilters() {
 
     // slots
     slotEl.innerHTML = `<option value="">اختر الميعاد</option>`;
+    const now = new Date();
+
     schedulesList
       .filter((s) => s.doc_id == docId)
+      .filter((s) => new Date(s.date) >= now)
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+
       .forEach((s) => {
         slotEl.innerHTML += `<option value="${s.id}">${formatDateTime(s.date)}</option>`;
       });
@@ -456,7 +470,7 @@ async function submitWalkIn() {
   }
 
   if (!name || !phone || !slotId || !paymentmethod) {
-    showToast("املأ البيانات ❗");
+    showToast("  البيانات غير مكتملة❗ ");
     return;
   }
 
