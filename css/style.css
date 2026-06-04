@@ -399,12 +399,15 @@ ul {
     transform: translateY(-15px);
   }
 }
+
 /* booking-steps */
+
 .landing .booking-steps {
   max-width: 500px;
   flex: 1.5;
   justify-content: center;
 }
+
 .booking-steps h3 {
   text-align: center;
   margin-bottom: 20px;
@@ -412,76 +415,314 @@ ul {
   font-size: 22px;
 }
 
+/* wrapper */
 .steps-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  align-items: center;
+  gap: 18px;
 }
 
+/* card */
 .step-card {
   background: #fff;
-  padding: 15px 20px;
-  border-radius: 15px;
+  padding: 18px 20px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  box-shadow: var(--shadow-soft);
-  opacity: 0;
-  width: 80%;
-  justify-content: center;
-  transform: translateY(20px);
-  transition: 0.9s;
+  gap: 16px;
+  width: 90%;
+  border: 1px solid rgba(31, 167, 154, 0.08);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s ease;
+  cursor: default;
 }
 
+/* خط جانبي */
+/* .step-card::after {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  top: 15%;
+
+  width: 4px;
+  height: 70%;
+
+  border-radius: 20px;
+
+  background: linear-gradient(to bottom, #1fa79a, rgba(31, 167, 154, 0.15));
+} */
+
+/* icon */
 .step-card i {
   font-size: 20px;
   color: #1fa79a;
 }
 
+/* title */
 .step-card h4 {
   margin: 0;
   font-size: 16px;
+  font-weight: 600;
+  color: #222;
 }
 
-/* رقم الخطوة */
+/* step number */
 .step-number {
-  width: 28px;
-  height: 28px;
-  background: #1fa79a;
+  opacity: 0;
+  min-width: 30px;
+  height: 30px;
+
+  background: linear-gradient(135deg, #1fa79a, #178d82);
+
   color: #fff;
+
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   font-size: 14px;
+  font-weight: 600;
 }
-
-/* Hover */
-.step-card:hover {
-  transform: translateY(-3px) scale(1.02);
-}
-
 /* Animations */
-.step1 {
-  animation: fadeUp 1s ease forwards;
-  animation-delay: 2.5s;
+/* typing effect */
+.typing-text {
+  overflow: hidden;
+  white-space: nowrap;
+
+  width: 0;
+
+  border-left: 2px solid #1fa79a;
+
+  padding-left: 5px;
+
+  color: #222;
+  font-size: 16px;
+  font-weight: 600;
+
+  animation:
+    typing 10s steps(14) infinite,
+    blink 0.7s infinite;
 }
-.step2 {
-  animation: fadeUp 1s ease forwards;
-  animation-delay: 3.5s;
-}
-.step3 {
-  animation: fadeUp 1s ease forwards;
-  animation-delay: 4.5s;
+/*  STEP APPEAR ANIMATION*/
+
+/* اخفاء مبدئي */
+.step-number,
+.step-card i,
+.typing-text {
+  opacity: 0;
 }
 
-@keyframes fadeUp {
+/* STEP 1*/
+
+.step1 .step-number,
+.step1 i {
+  animation: fadeIn 0.5s ease forwards 3s;
+}
+
+.step1 .typing-text {
+  width: 0;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  border-left: 2px solid #1fa79a;
+
+  padding-left: 5px;
+
+  animation:
+    showText 0.1s linear forwards 0.5s,
+    typing1 2s steps(14) forwards 3s,
+    blink 0.7s  0.6s,
+    hideCursor 0.01s forwards 5s;
+
+    
+}
+
+/* STEP 2 */
+
+.step2 .step-number,
+.step2 i {
+  animation: fadeIn 0.5s ease forwards 6s;
+}
+
+.step2 .typing-text {
+  width: 0;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  border-left: 2px solid #1fa79a;
+
+  padding-left: 5px;
+
+  animation:
+    showText 0.1s linear forwards 3.5s,
+    typing2 2s steps(14) forwards 6s,
+    blink 0.7s  3.6s,
+  hideCursor 0.01s forwards 8s;
+}
+
+/* STEP 3 */
+
+.step3 .step-number,
+.step3 i {
+  animation: fadeIn 0.5s ease forwards 9s;
+}
+
+.step3 .typing-text {
+  width: 0;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  border-left: 2px solid #1fa79a;
+
+  padding-left: 5px;
+
+  animation:
+    showText 0.1s linear forwards 6.5s,
+    typing3 2s steps(14) forwards 9s,
+    blink 2s  6.6s,
+    hideCursor 0.01s forwards 12s;
+}
+
+/* =========================
+   KEYFRAMES
+========================= */
+
+/* ظهور */
+@keyframes fadeIn {
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
+
+/* اظهار النص */
+@keyframes showText {
+  to {
+    opacity: 1;
+  }
+}
+
+/* typing step 1 */
+@keyframes typing1 {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 105px;
+  }
+}
+
+/* typing step 2 */
+@keyframes typing2 {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 95px;
+  }
+}
+
+/* typing step 3 */
+@keyframes typing3 {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 75px;
+  }
+}
+
+/* cursor blink */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+@keyframes hideCursor {
+  to {
+    border-left-color: transparent;
+  }
+}
+
+/* .landing .form {
+  display: flex;
+  flex: 1.5;
+  justify-content: center;
+}
+.landing .form form {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.landing .form select,
+.landing .form button {
+  width: 100%;
+  height: 50px;
+  padding: 0 35px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  background: #fff;
+  transition: 0.3s;
+}
+.landing .form select:focus,
+.landing .form button:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(39, 165, 152, 0.15);
+}
+.landing .form select::placeholder {
+  color: var(--color-gray);
+}
+.landing .form button {
+  height: 50px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--btn-primary);
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.landing .form button:hover {
+  background: var(--btn-primary-hover);
+}
+
+/* تنسيق الايقونات */
+/* .input-group {
+  position: relative;
+}
+
+.input-group i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-gray);
+}
+.input-group input,
+.input-group select {
+  padding-right: 40px;
+} */
+*/
 
 /* الاطباء المتاحين اليوم  */
 #available-doctors {
@@ -781,7 +1022,7 @@ ul {
   display: flex;
   gap: 40px;
   width: max-content;
-  animation: scroll 30s linear infinite;
+  animation: scroll 80s linear infinite;
 }
 
 .logos img {

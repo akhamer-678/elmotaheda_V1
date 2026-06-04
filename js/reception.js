@@ -51,20 +51,30 @@ async function fetchData() {
     const { data: schedules } = await supabaseClient
       .from("doc_schedual")
       .select("*");
+    const { data: contracts } = await supabaseClient
+      .from("contracts")
+      .select("*");
 
     doctorsList = doctors || [];
     specialtiesList = specialties || [];
     schedulesList = schedules || [];
+    contractsList = contracts || [];
 
     allData = (bookings || []).map((b) => {
       const slot = schedulesList.find((s) => s.id === b.slot_id);
       const doc = doctorsList.find((d) => d.id === slot?.doc_id);
       const spec = specialtiesList.find((s) => s.id === doc?.special_id);
+      const contr = contractsList.find((c) => c.id === b.contract_id);
 
       return {
         id: b.id,
         patient: b.patient_name,
         phone: b.patient_phone,
+        contract: contr?.name
+          ? contr.name.length > 30
+            ? contr.name.slice(0 , 30) + "..."
+            : contr.name
+          : "نقدي",
         status: b.status || "pending",
         date: slot?.date || "",
         doctor: doc?.doc_name || "-",
@@ -199,7 +209,7 @@ function renderTable() {
         <td>${formatDateTime(item.date)}</td>
         <td>${item.patient}</td>
         <td>${item.phone}</td>
-        
+        <td>${item.contract}</td>
         <td>
         <span class="status-badge ${item.status}">${item.status}</span>
         <div class="actions">
