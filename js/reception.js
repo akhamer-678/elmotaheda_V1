@@ -489,7 +489,7 @@ async function submitWalkIn() {
     .from("bookings")
     .select("queue_num")
     .eq("slot_id", slotId)
-    .in("type", ["walk_in", "online"])
+    // .in("type", ["walk_in", "online"])
     .in("status", ["confirmed", "attended"])
     .order("queue_num", { ascending: false })
     .limit(1);

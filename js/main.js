@@ -83,6 +83,25 @@ document.addEventListener("DOMContentLoaded", async function () {
     "-" +
     String(now.getDate()).padStart(2, "0");
 
+  // الحجز يبدأ بعد 10 صباحا
+  
+  const egyptHour = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "Africa/Cairo",
+      hour: "numeric",
+      hour12: false,
+    }).format(new Date()),
+  );
+
+  if (egyptHour < 10) {
+    doctorsList.innerHTML = `
+    <div class="no_doctor">
+      <p>يبدأ الحجز يوميًا من الساعة 10 صباحًا</p>
+    </div>
+  `;
+    return;
+  }
+
   const { data, error } = await supabaseClient
     .from("doctor_availability")
     .select(
