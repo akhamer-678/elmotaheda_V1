@@ -18,6 +18,55 @@ document.addEventListener("DOMContentLoaded", async function () {
   let allDoctors = [];
   let availabilityMap = {};
 
+  /*==================
+  الاعلانات
+  ================*/
+  async function loadAnnouncement() {
+    const egyptDate = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Africa/Cairo",
+    }).format(new Date());
+
+    const { data,error } = await supabaseClient
+      .from("announcements")
+      .select("*")
+      .eq("is_active", true)
+      .gte("expires_at", egyptDate);
+    if (error) {
+      console.log(error);
+      return;
+    }
+      
+    if (data && data.length > 0) {
+      showAd(data);
+    } else {
+      showSteps();
+    }
+  }
+
+  function showAd(announcements) {
+    document.getElementById("stepsContent").style.display = "none";
+
+    const ad = document.getElementById("adBox");
+    const text = document.getElementById("adMessage");
+
+    ad.classList.remove("hidden");
+
+    // دمج كل الإعلانات
+    text.innerHTML = announcements
+      .map((item) => `* ${item.message}`)
+      .join("<br><br>");
+
+    text.style.animation = "none";
+    text.offsetHeight;
+    text.style.animation = "";
+  }
+
+  function showSteps() {
+    document.getElementById("adBox").classList.add("hidden");
+
+    document.getElementById("stepsContent").style.display = "block";
+  }
+  loadAnnouncement();
   // =========================
   // تحميل التخصصات
   // =========================
@@ -92,7 +141,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       hour12: false,
     }).format(new Date()),
   );
-
+    console.log(egyptHour)
   if (egyptHour < 10) {
     doctorsList.innerHTML = `
     <div class="no_doctor">
