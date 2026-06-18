@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   // الحجز يبدأ بعد 10 صباحا
   console.log("TIME CHECK");
 
-  const egyptHour = Number(
+  let egyptHour = Number(
     new Intl.DateTimeFormat("en-US", {
       timeZone: "Africa/Cairo",
       hour: "numeric",
