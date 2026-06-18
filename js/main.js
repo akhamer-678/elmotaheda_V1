@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       timeZone: "Africa/Cairo",
     }).format(new Date());
 
-    const { data,error } = await supabaseClient
+    const { data, error } = await supabaseClient
       .from("announcements")
       .select("*")
       .eq("is_active", true)
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.log(error);
       return;
     }
-      
+
     if (data && data.length > 0) {
       showAd(data);
     } else {
@@ -142,7 +142,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       hour12: false,
     }).format(new Date()),
   );
-  alert("egyptHour = " + egyptHour);
+  if (egyptHour === 24) {
+    egyptHour = 0;
+  }
   if (egyptHour < 10) {
     doctorsList.innerHTML = `
     <div class="no_doctor">
