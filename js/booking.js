@@ -176,6 +176,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("modal-doctor").textContent =
       "👨‍⚕️ الدكتور: " + data.doctor;
 
+    if (data.doctor === "محمد الشوادفي") {
+      document.getElementById("modal-external").textContent =
+        " ** برجاء التواصل مع المركز لتحديد موعد الجلسه **";
+    }
+
     document.getElementById("modal-date").textContent =
       "📅 ميعاد الدكتور " + data.date + " - " + data.time;
 

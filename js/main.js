@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     String(now.getDate()).padStart(2, "0");
 
   // الحجز يبدأ بعد 10 صباحا
-  
+
   const egyptHour = Number(
     new Intl.DateTimeFormat("en-US", {
       timeZone: "Africa/Cairo",
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   if (egyptHour < 10) {
     doctorsList.innerHTML = `
     <div class="no_doctor">
-      <p>يبدأ الحجز يوميًا من الساعة 10 صباحًا</p>
+      <p>سيبدأ الحجز  من الساعة 10 صباحًا</p>
     </div>
   `;
     return;
@@ -217,7 +217,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         ${
           hasAvailable
-            ? `<button onclick="goToBooking('${doc.id}')">احجز الآن</button>`
+            ? `<button 
+             class="booking-btn"
+              onclick="this.innerHTML='جاري التحويل...';
+               this.disabled=true;
+                setTimeout(() => goToBooking('${doc.id}'), 500);
+              ">
+                احجز الآن         
+            </button>`
             : ""
         }
         </div>
