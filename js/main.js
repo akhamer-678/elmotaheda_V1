@@ -133,6 +133,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     String(now.getDate()).padStart(2, "0");
 
   // الحجز يبدأ بعد 10 صباحا
+  console.log("TIME CHECK");
 
   const egyptHour = Number(
     new Intl.DateTimeFormat("en-US", {
@@ -141,7 +142,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       hour12: false,
     }).format(new Date()),
   );
-    console.log(egyptHour)
+  alert("egyptHour = " + egyptHour);
   if (egyptHour < 10) {
     doctorsList.innerHTML = `
     <div class="no_doctor">
