@@ -1084,9 +1084,9 @@ ul {
   opacity: 1;
   transform: scale(1.1);
 }
-.logos:hover .logos-track {
+/* .logos:hover .logos-track {
   animation-play-state: paused;
-}
+} */
 .logos::before,
 .logos::after {
   content: "";
