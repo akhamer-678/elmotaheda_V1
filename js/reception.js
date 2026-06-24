@@ -72,7 +72,7 @@ async function fetchData() {
         phone: b.patient_phone,
         contract: contr?.name
           ? contr.name.length > 30
-            ? contr.name.slice(0 , 30) + "..."
+            ? contr.name.slice(0, 30) + "..."
             : contr.name
           : "نقدي",
         status: b.status || "pending",
@@ -420,7 +420,7 @@ function initModalFilters() {
     // slots
     slotEl.innerHTML = `<option value="">اختر الميعاد</option>`;
     const now = new Date();
-
+    now.setHours(0, 0, 0, 0);
     schedulesList
       .filter((s) => s.doc_id == docId)
       .filter((s) => new Date(s.date) >= now)
@@ -527,7 +527,7 @@ async function submitWalkIn() {
     queue: nextQueue,
   });
   closeAddModal();
-  fetchData(); // refresh
+  // fetchData(); // refresh
 }
 
 //=======  زرار الطباعه ==============
@@ -628,4 +628,4 @@ supabaseClient
   .subscribe();
 
 // ================== START ==================
-fetchData();
+// fetchData();
